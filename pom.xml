@@ -3,21 +3,49 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<groupId>io.github.ghokun</groupId>
 	<artifactId>updated-maven-plugin</artifactId>
 	<packaging>maven-plugin</packaging>
 	<version>1.0.0</version>
+
 	<name>Updated Maven Plugin</name>
 	<description>A maven plugin that lists and validates updated modules compared to remote repositories</description>
+	<url>https://github.com/ghokun/updated-maven-plugin</url>
 
-	<organization>
-	</organization>
+	<developers>
+		<developer>
+			<name>ghokun</name>
+			<email>gokhun@gmail.com</email>
+			<organization>Github</organization>
+			<organizationUrl>https://github.com/ghokun/</organizationUrl>
+		</developer>
+	</developers>
 
-	<developers></developers>
+	<scm>
+		<connection>scm:git:https://github.com/ghokun/updated-maven-plugin.git</connection>
+		<developerConnection>scm:git:ssh://github.com/ghokun/updated-maven-plugin.git</developerConnection>
+		<url>https://github.com/ghokun/updated-maven-plugin</url>
+		<tag>HEAD</tag>
+	</scm>
 
-	<scm></scm>
-
-	<distributionManagement></distributionManagement>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 
 	<properties>
 		<!-- Project -->
@@ -32,15 +60,16 @@
 		<maven-plugin-annotations.version>3.6.0</maven-plugin-annotations.version>
 		<maven-project.version>3.0-alpha-2</maven-project.version>
 		<maven-core.version>3.6.3</maven-core.version>
-		<aether-api.version>1.1.0.redhat-1</aether-api.version>
-		<aether-util.version>1.1.0.redhat-1</aether-util.version>
 		<maven-aether-provider.version>3.3.9.redhat-2</maven-aether-provider.version>
 		<org.eclipse.jgit.version>5.7.0.202003110725-r</org.eclipse.jgit.version>
-		<aetherVersion>1.1.0.redhat-1</aetherVersion>
-		<wagonVersion>3.4.0</wagonVersion>
+		<aether.version>1.1.0.redhat-1</aether.version>
+		<wagon.version>3.4.0</wagon.version>
 		<!-- Plugins -->
 		<maven-plugin-plugin.version>3.6.0</maven-plugin-plugin.version>
+		<maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
 		<maven-source-plugin.version>3.2.1</maven-source-plugin.version>
+		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
+		<nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -70,48 +99,46 @@
 			<artifactId>maven-aether-provider</artifactId>
 			<version>${maven-aether-provider.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-api</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-util</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-impl</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-connector-basic</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-transport-file</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-transport-http</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.eclipse.aether</groupId>
 			<artifactId>aether-transport-wagon</artifactId>
-			<version>${aetherVersion}</version>
+			<version>${aether.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.maven.wagon</groupId>
 			<artifactId>wagon-ssh</artifactId>
-			<version>${wagonVersion}</version>
+			<version>${wagon.version}</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.eclipse.jgit</groupId>
 			<artifactId>org.eclipse.jgit</artifactId>
@@ -135,6 +162,19 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>${maven-source-plugin.version}</version>
 				<executions>
@@ -148,5 +188,40 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>release</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>${maven-gpg-plugin.version}</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>${nexus-staging-maven-plugin.version}</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>true</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 </project>
