@@ -47,6 +47,7 @@ public interface SourceCodeChangeDetector {
 	 * @param projects All modules including root.
 	 * @param log Maven plugin logger.
 	 * @param remoteBranch Remote branch name to compare local changes.
+	 * @throws MojoExecutionException Throws exception
 	 * @return SourceCodeChanges tree with project information.
 	 */
 	SourceCodeChanges detectChanges(

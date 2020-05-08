@@ -106,11 +106,11 @@ public abstract class AbstractUpdatedMojo extends AbstractMojo {
 	/**
 	 * Finds latest version of artifact from remote repositories.
 	 * 
-	 * @param groupId
-	 * @param artifactId
-	 * @param version
+	 * @param groupId Group ID
+	 * @param artifactId Artifact ID
+	 * @param version Version
 	 * @return Latest version of artifact
-	 * @throws MojoExecutionException
+	 * @throws MojoExecutionException Better safe than sorry
 	 */
 	protected VersionRangeResult findLatestVersionOfArtifact(
 			String groupId,
