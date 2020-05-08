@@ -22,14 +22,15 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.scm;
+package io.github.ghokun.updated.enumeration;
 
 /**
- * Source code management types.
+ * Validation policy types. Permissive warns you, Enforcing throws exceptions.
  *
  * @author ghokun
  * @since 1.0.0
  */
-public enum SourceCodeManagement {
-	GIT
+public enum ValidationPolicy {
+	PERMISSIVE,
+	ENFORCING
 }

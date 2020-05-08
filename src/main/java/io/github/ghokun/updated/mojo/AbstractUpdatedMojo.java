@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.mojo;
+package io.github.ghokun.updated.mojo;
 
 import java.util.HashSet;
 import java.util.List;
@@ -66,6 +66,9 @@ public abstract class AbstractUpdatedMojo extends AbstractMojo {
 	
 	@Parameter(defaultValue = "${project.remoteProjectRepositories}", readonly = true, required = true)
 	protected List<RemoteRepository> repositories;
+	
+	@Parameter(defaultValue = "true", property = "showProgress", required = false)
+	protected boolean showProgress;
 	
 	private static RepositorySystem repositorySystemSingleton;
 	

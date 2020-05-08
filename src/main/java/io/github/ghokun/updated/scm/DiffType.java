@@ -22,37 +22,29 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.scm;
+package io.github.ghokun.updated.scm;
 
-import java.util.Set;
-
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.project.MavenProject;
+import org.eclipse.jgit.diff.DiffEntry;
 
 /**
- * Source Code Change detection interface. Any implementation of this interface should create {@link SourceCodeChanges}
- * tree with {@link DiffType} and module information.
+ * General type of change a single file-level patch describes. Conforms {@link DiffEntry.ChangeType}.
  *
  * @author ghokun
  * @since 1.0.0
  */
-@FunctionalInterface
-public interface SourceCodeChangeDetector {
+public enum DiffType {
+	/** Add a new file to the project */
+	ADD,
 	
-	/**
-	 * Detect source code changes that is made locally.
-	 *
-	 * @param project Top level MavenProject to detect changes.
-	 * @param projects All modules including root.
-	 * @param log Maven plugin logger.
-	 * @param remoteBranch Remote branch name to compare local changes.
-	 * @throws MojoExecutionException Throws exception
-	 * @return SourceCodeChanges tree with project information.
-	 */
-	SourceCodeChanges detectChanges(
-			MavenProject project,
-			Set<MavenProject> projects,
-			Log log,
-			String remoteBranch) throws MojoExecutionException;
+	/** Modify an existing file in the project (content and/or mode) */
+	MODIFY,
+	
+	/** Delete an existing file from the project */
+	DELETE,
+	
+	/** Rename an existing file to a new location */
+	RENAME,
+	
+	/** Copy an existing file to a new location, keeping the original */
+	COPY;
 }

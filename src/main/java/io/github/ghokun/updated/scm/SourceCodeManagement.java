@@ -22,43 +22,14 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.enumeration;
-
-import java.util.HashMap;
-import java.util.Map;
+package io.github.ghokun.updated.scm;
 
 /**
- * LineEnding enumeration.
+ * Source code management types.
  *
  * @author ghokun
  * @since 1.0.0
  */
-public enum LineEnding {
-
-	CR("\r"),
-	LF("\n"),
-	CRLF("\r\n");
-
-	private final String value;
-
-	private LineEnding(final String value) {
-		this.value = value;
-	}
-
-	public String getValue() {
-		return this.value;
-	}
-
-	private static Map<String, LineEnding> cache;
-
-	static {
-		cache = new HashMap<>();
-		for (final LineEnding lineEnding : LineEnding.values()) {
-			cache.put(lineEnding.value, lineEnding);
-		}
-	}
-
-	public static LineEnding fromValue(final String value) {
-		return cache.get(value);
-	}
+public enum SourceCodeManagement {
+	GIT
 }

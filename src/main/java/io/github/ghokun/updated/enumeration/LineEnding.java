@@ -22,33 +22,43 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.scm;
+package io.github.ghokun.updated.enumeration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Factory for creating {@link SourceCodeChangeDetector} instances.
+ * LineEnding enumeration.
  *
  * @author ghokun
  * @since 1.0.0
  */
-public final class SourceCodeChangeDetectorFactory {
+public enum LineEnding {
 
-	/**
-	 * Do not create instances for this.
-	 */
-	private SourceCodeChangeDetectorFactory() {
+	CR("\r"),
+	LF("\n"),
+	CRLF("\r\n");
+
+	private final String value;
+
+	private LineEnding(final String value) {
+		this.value = value;
 	}
 
-	/**
-	 * Creates {@link SourceCodeChangeDetector} instance depending on given type.
-	 *
-	 * @param scm SourceCodeManagement type
-	 * @return SourceCodeChangeDetector instance
-	 */
-	public static SourceCodeChangeDetector getDetector(SourceCodeManagement scm) {
-		if (SourceCodeManagement.GIT.equals(scm)) {
-			return new GitDetector();
+	public String getValue() {
+		return this.value;
+	}
+
+	private static Map<String, LineEnding> cache;
+
+	static {
+		cache = new HashMap<>();
+		for (final LineEnding lineEnding : LineEnding.values()) {
+			cache.put(lineEnding.value, lineEnding);
 		}
-		throw new IllegalArgumentException(
-			"Please provide an enum of type: " + SourceCodeManagement.class.getCanonicalName());
+	}
+
+	public static LineEnding fromValue(final String value) {
+		return cache.get(value);
 	}
 }

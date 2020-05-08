@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.scm;
+package io.github.ghokun.updated.scm;
 
 import java.util.Objects;
 

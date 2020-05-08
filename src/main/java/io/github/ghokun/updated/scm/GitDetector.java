@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.scm;
+package io.github.ghokun.updated.scm;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +53,7 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser;
  * @author ghokun
  * @since 1.0.0
  */
-class GitDetector implements SourceCodeChangeDetector {
+public final class GitDetector implements SourceCodeChangeDetector {
 	
 	@Override
 	public SourceCodeChanges detectChanges(

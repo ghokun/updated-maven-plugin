@@ -22,15 +22,33 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.enumeration;
+package io.github.ghokun.updated.scm;
 
 /**
- * Validation policy types. Permissive warns you, Enforcing throws exceptions.
+ * Factory for creating {@link SourceCodeChangeDetector} instances.
  *
  * @author ghokun
  * @since 1.0.0
  */
-public enum ValidationPolicy {
-	PERMISSIVE,
-	ENFORCING
+public final class SourceCodeChangeDetectorFactory {
+
+	/**
+	 * Do not create instances for this.
+	 */
+	private SourceCodeChangeDetectorFactory() {
+	}
+
+	/**
+	 * Creates {@link SourceCodeChangeDetector} instance depending on given type.
+	 *
+	 * @param scm SourceCodeManagement type
+	 * @return SourceCodeChangeDetector instance
+	 */
+	public static SourceCodeChangeDetector getDetector(SourceCodeManagement scm) {
+		if (SourceCodeManagement.GIT.equals(scm)) {
+			return new GitDetector();
+		}
+		throw new IllegalArgumentException(
+			"Please provide an enum of type: " + SourceCodeManagement.class.getCanonicalName());
+	}
 }

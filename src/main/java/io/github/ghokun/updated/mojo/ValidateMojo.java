@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.mojo;
+package io.github.ghokun.updated.mojo;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -31,10 +31,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.VersionRangeResult;
 
-import io.github.ghokun.enumeration.ValidationPolicy;
-import io.github.ghokun.scm.SourceCodeChangeDetectorFactory;
-import io.github.ghokun.scm.SourceCodeChanges;
-import io.github.ghokun.scm.SourceCodeManagement;
+import io.github.ghokun.updated.enumeration.ValidationPolicy;
+import io.github.ghokun.updated.scm.SourceCodeChangeDetectorFactory;
+import io.github.ghokun.updated.scm.SourceCodeChanges;
+import io.github.ghokun.updated.scm.SourceCodeManagement;
 
 /**
  * Updated Maven Plugin Validate Mojo. Purpose of this mojo is to determine source code changes in modules and check
@@ -92,11 +92,19 @@ public class ValidateMojo extends AbstractUpdatedMojo {
 			.detectChanges(this.project, this.getProjects(), this.getLog(), this.remoteBranch);
 		
 		if (this.showChangeDetails) {
-			this.getLog().info("Change Details:\n" + sourceCodeChanges.toString());
+			this.getLog().info("Change Details:" + System.lineSeparator() + sourceCodeChanges.toString());
 		}
 		
 		boolean shouldThrowException = false;
+		int progress = 0;
+		if (this.showProgress) {
+			this.getLog().info("");
+			this.getLog().info("Progress:");
+		}
 		for (final SourceCodeChanges module : sourceCodeChanges) {
+			if (this.showProgress) {
+				this.getLog().info(++progress + " / " + this.getProjects().size() + " [" + module.getCoords() + "]");
+			}
 			if (module.hasDiff()) {
 				
 				final VersionRangeResult versionRangeResult = this

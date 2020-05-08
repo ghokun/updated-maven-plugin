@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package io.github.ghokun.mojo;
+package io.github.ghokun.updated.mojo;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import org.apache.maven.project.MavenProject;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.resolution.VersionRangeResult;
 
-import io.github.ghokun.enumeration.LineEnding;
+import io.github.ghokun.updated.enumeration.LineEnding;
 
 /**
  * Updated Maven Plugin List Mojo. This mojo lists local and remote versions of all sub-modules (recursively). Uses
@@ -110,9 +110,6 @@ public class ListMojo extends AbstractUpdatedMojo {
 		return LineEnding.fromValue(this.getLineEnding()).name();
 	}
 	
-	@Parameter(defaultValue = "true", property = "showProgress", required = false)
-	private boolean showProgress;
-	
 	@Override
 	public void execute() throws MojoExecutionException {
 		
@@ -131,12 +128,16 @@ public class ListMojo extends AbstractUpdatedMojo {
 		}
 		
 		int progress = 0;
-		
+		if (this.showProgress) {
+			this.getLog().info("");
+			this.getLog().info("Progress:");
+		}
 		for (final MavenProject p : this.getProjects()) {
 			if (this.showProgress) {
-				this.getLog().info("");
-				this.getLog().info("Progress:");
-				this.getLog().info(++progress + " / " + this.getProjects().size());
+				this
+					.getLog()
+					.info(++progress + " / " + this.getProjects().size() + " [" + p.getGroupId() + ":"
+							+ p.getArtifactId() + "]");
 			}
 			final VersionRangeResult result = this
 				.findLatestVersionOfArtifact(p.getArtifact().getGroupId(), p.getArtifact().getArtifactId(), "[0,)");
