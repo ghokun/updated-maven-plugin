@@ -139,6 +139,7 @@ public class ValidateMojo extends AbstractUpdatedMojo {
 				}
 			}
 		}
+		this.cleanUp();
 		if (shouldThrowException) {
 			throw new MojoExecutionException("You have validation errors. Please fix them before continuing.");
 		}

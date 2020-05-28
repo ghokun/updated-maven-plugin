@@ -169,7 +169,7 @@ public class ListMojo extends AbstractUpdatedMojo {
 		this.getLog().info("");
 		this.getLog().info("Output:" + this.getLineEnding() + resultBuilder.toString());
 		this.getLog().info("");
-		
+		this.cleanUp();
 		if (this.getOutputFile().length() > 0) {
 			try (FileWriter writer = new FileWriter(this.outputFile + ".csv")) {
 				writer.write(resultBuilder.toString());

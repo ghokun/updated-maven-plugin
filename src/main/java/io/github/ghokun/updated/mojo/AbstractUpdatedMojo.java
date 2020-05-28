@@ -24,9 +24,14 @@
 
 package io.github.ghokun.updated.mojo;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -70,6 +75,9 @@ public abstract class AbstractUpdatedMojo extends AbstractMojo {
 	@Parameter(defaultValue = "true", property = "showProgress", required = false)
 	protected boolean showProgress;
 	
+	@Parameter(defaultValue = "${project.basedir}/.m2", property = "tempLocalRepo", required = false)
+	protected String tempLocalRepo;
+	
 	private static RepositorySystem repositorySystemSingleton;
 	
 	protected static RepositorySystem repositorySystem() {
@@ -85,10 +93,10 @@ public abstract class AbstractUpdatedMojo extends AbstractMojo {
 	
 	private static RepositorySystemSession repositorySystemSessionSingleton;
 	
-	protected static RepositorySystemSession repositorySystemSession() {
+	protected static RepositorySystemSession repositorySystemSession(String tempLocalRepo) {
 		if (repositorySystemSessionSingleton == null) {
 			final DefaultRepositorySystemSession session = MavenRepositorySystemUtils.newSession();
-			final LocalRepository localRepo = new LocalRepository("/tmp/.m2");
+			final LocalRepository localRepo = new LocalRepository(tempLocalRepo);
 			session.setLocalRepositoryManager(repositorySystem().newLocalRepositoryManager(session, localRepo));
 			repositorySystemSessionSingleton = session;
 		}
@@ -124,9 +132,23 @@ public abstract class AbstractUpdatedMojo extends AbstractMojo {
 			this.repositories,
 			null);
 		try {
-			return repositorySystem().resolveVersionRange(repositorySystemSession(), request);
+			return repositorySystem().resolveVersionRange(repositorySystemSession(this.tempLocalRepo), request);
 		} catch (final VersionRangeResolutionException e) {
 			throw new MojoExecutionException("An error occurred while resolving versions from remote repository.", e);
+		}
+	}
+	
+	protected void cleanUp() {
+		// Delete local repo
+		if (Files.exists(Paths.get(this.tempLocalRepo))) {
+			try (final Stream<Path> pathStream = Files.walk(Paths.get(this.tempLocalRepo))) {
+				pathStream.map(Path::toFile).sorted((o1, o2) -> o2.compareTo(o1)).forEach(java.io.File::delete);
+				this.getLog().info(String.format("Deleted files in given directory: %s", this.tempLocalRepo));
+			} catch (final IOException e) {
+				this
+					.getLog()
+					.warn(String.format("Could not delete files in given directory: %s", this.tempLocalRepo), e);
+			}
 		}
 	}
 }
